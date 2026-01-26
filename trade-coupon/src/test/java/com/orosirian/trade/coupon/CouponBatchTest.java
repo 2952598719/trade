@@ -4,15 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.controller.CouponBatchController;
 import com.orosirian.trade.coupon.db.dao.CouponBatchDao;
 import com.orosirian.trade.coupon.db.model.CouponBatch;
-import com.orosirian.trade.coupon.db.model.CouponRule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 
 @SpringBootTest
 public class CouponBatchTest {
