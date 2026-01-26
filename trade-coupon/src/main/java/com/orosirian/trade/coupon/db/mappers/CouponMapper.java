@@ -8,7 +8,7 @@ public interface CouponMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(Coupon row);
+    int insertCoupon(Coupon row);
 
     int insertSelective(Coupon row);
 

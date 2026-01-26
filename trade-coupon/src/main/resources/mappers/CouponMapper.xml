@@ -27,7 +27,7 @@
         delete from coupon_user
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
+    <insert id="insertCoupon" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
         insert into coupon_user (id, user_id, batch_id,
                                  coupon_name, status, order_id,
                                  received_time, validate_time, used_time,

@@ -2,7 +2,7 @@ package com.orosirian.trade.coupon;
 
 import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.controller.CouponBatchController;
-import com.orosirian.trade.coupon.db.dao.CouponBatchDao;
+import com.orosirian.trade.coupon.db.mappers.CouponBatchMapper;
 import com.orosirian.trade.coupon.db.model.CouponBatch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class CouponBatchTest {
     private CouponBatchController couponBatchController;
 
     @Autowired
-    private CouponBatchDao couponBatchDao;
+    private CouponBatchMapper couponBatchMapper;
 
     @Test
     public void addCouponBatchActionTest() {
@@ -38,21 +38,21 @@ public class CouponBatchTest {
 
     @Test
     public void deleteGoodsTest() {
-        boolean deleteResult = couponBatchDao.deleteCouponBatchById(11);     // 去看mysql里有没有对应数据然后再运行
+        boolean deleteResult = couponBatchMapper.deleteCouponBatchById(13L) > 0;     // 去看mysql里有没有对应数据然后再运行
         assertThat(deleteResult).isTrue();
     }
 
     @Test
     public void queryGoodsTest() {
-        CouponBatch goods = couponBatchDao.queryCouponBatchById(12);
+        CouponBatch goods = couponBatchMapper.queryCouponBatchById(12L);
         System.out.println(JSON.toJSONString(goods));
     }
 
     @Test
     public void updateGoods() {
-        CouponBatch couponBatch = couponBatchDao.queryCouponBatchById(12);
+        CouponBatch couponBatch = couponBatchMapper.queryCouponBatchById(12L);
         couponBatch.setBatchName(couponBatch.getBatchName() + " update");
-        boolean updateResult = couponBatchDao.updateCouponBatch(couponBatch);
+        boolean updateResult = couponBatchMapper.updateCouponBatchSelective(couponBatch) > 0;
         assertThat(updateResult).isTrue();
     }
 }

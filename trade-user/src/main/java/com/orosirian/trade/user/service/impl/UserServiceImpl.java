@@ -1,6 +1,7 @@
 package com.orosirian.trade.user.service.impl;
 
 import com.orosirian.trade.user.db.dao.UserDao;
+import com.orosirian.trade.user.db.mappers.UserMapper;
 import com.orosirian.trade.user.db.model.User;
 import com.orosirian.trade.user.service.UserService;
 import com.orosirian.trade.user.utils.BizException;
@@ -14,19 +15,19 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserMapper userMapper;
 
     public boolean insertUser(User user) {
-        if (userDao.isUserNameExist(user.getUserName())) {
+        if (userMapper.isUserNameExist(user.getUserName())) {
             log.error("username already existed: {}", user.getUserName());
             throw new BizException("用户名已存在");
         }
         String hashedPassword = BCrypt.hashpw(user.getLoginPassword(), BCrypt.gensalt());
-        return userDao.insertUser(user.getUserName(), hashedPassword, user.getTags());
+        return userMapper.insertUser(user.getUserName(), hashedPassword, user.getTags()) > 0;
     }
 
     public boolean checkPassword(String userName, String loginPassword) {
-        String hashedPassword = userDao.selectLoginPassword(userName);
+        String hashedPassword = userMapper.selectLoginPassword(userName);
         if (hashedPassword == null || hashedPassword.isEmpty()) {
             log.error("user {} not exist or has a empty password", userName);
             throw new BizException("用户不存在或密码为空");

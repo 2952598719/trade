@@ -19,17 +19,17 @@
         id, batch_name, coupon_name, coupon_type, grant_type, total_count, available_count,
     assign_count, used_count, rule, status, create_time
     </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="queryCouponBatchById" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from coupon_batch
         where id = #{id,jdbcType=BIGINT}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteCouponBatchById" parameterType="java.lang.Long">
         delete from coupon_batch
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
+    <insert id="insertCouponBatch" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
         insert into coupon_batch (id, batch_name, coupon_name,
                                   coupon_type, grant_type, total_count,
                                   available_count, assign_count, used_count,
@@ -120,7 +120,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
+    <update id="updateCouponBatchSelective" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
         update coupon_batch
         <set>
             <if test="batchName != null">
@@ -159,7 +159,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
+    <update id="updateCouponBatch" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
         update coupon_batch
         set batch_name = #{batchName,jdbcType=VARCHAR},
             coupon_name = #{couponName,jdbcType=VARCHAR},

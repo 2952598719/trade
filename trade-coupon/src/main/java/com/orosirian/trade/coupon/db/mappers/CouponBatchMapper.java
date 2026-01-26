@@ -8,17 +8,17 @@ import java.util.List;
 @Mapper
 public interface CouponBatchMapper {
 
-    int deleteByPrimaryKey(Long id);
+    int deleteCouponBatchById(Long id);
 
-    int insert(CouponBatch row);
+    int insertCouponBatch(CouponBatch row);
 
     int insertSelective(CouponBatch row);
 
-    CouponBatch selectByPrimaryKey(Long id);
+    CouponBatch queryCouponBatchById(Long id);
 
-    int updateByPrimaryKeySelective(CouponBatch row);
+    int updateCouponBatchSelective(CouponBatch row);
 
-    int updateByPrimaryKey(CouponBatch row);
+    int updateCouponBatch(CouponBatch row);
 
     // 自定义语句
     List<CouponBatch> queryCouponBatchList();
