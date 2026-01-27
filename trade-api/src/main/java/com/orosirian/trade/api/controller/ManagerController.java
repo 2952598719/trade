@@ -1,26 +1,18 @@
 package com.orosirian.trade.api.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.orosirian.trade.coupon.db.model.CouponRule;
-import com.orosirian.trade.coupon.db.model.CouponBatch;
-import com.orosirian.trade.coupon.service.CouponBatchService;
+import com.orosirian.trade.api.client.CouponServiceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDateTime;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@Controller
+@RestController
 public class ManagerController {
 
     @Autowired
-    private CouponBatchService couponBatchService;
+    private CouponServiceClient couponServiceClient;
 
-    @RequestMapping("/addCouponBatchAction")
+    @PostMapping("/coupon/addCouponBatchAction")
     public String addCouponBatchAction(
             @RequestParam("batchName") String batchName,
             @RequestParam("couponName") String couponName,
@@ -30,34 +22,21 @@ public class ManagerController {
             @RequestParam("startTime") String startTime,
             @RequestParam("endTime") String endTime,
             @RequestParam("thresholdAmount") int thresholdAmount,
-            @RequestParam("discountAmount") int discountAmount,
-            Map<String, Object> resultMap
+            @RequestParam("discountAmount") int discountAmount
     ) {
-        // 构造优惠券规则
-        CouponRule couponRule = new CouponRule();
-        couponRule.setCouponType(couponType);
-        couponRule.setGrantType(grantType);
-        couponRule.setStartTime(LocalDateTime.parse(startTime));  // 原先格式类似2026-01-26T17:24
-        couponRule.setEndTime(LocalDateTime.parse(endTime));
-        couponRule.setThresholdAmount(thresholdAmount);
-        couponRule.setDiscountAmount(discountAmount);
-
-        // 构造优惠券
-        CouponBatch couponBatch = new CouponBatch();
-        couponBatch.setBatchName(batchName);
-        couponBatch.setCouponName(couponName);
-        couponBatch.setCouponType(couponType);
-        couponBatch.setGrantType(grantType);
-        couponBatch.setTotalCount(totalCount);
-        couponBatch.setStatus(1);   // 默认状态有效
-        couponBatch.setUsedCount(0L);
-        couponBatch.setAssignCount(0L);
-        couponBatch.setCreateTime(LocalDateTime.now());
-        couponBatch.setRule(JSON.toJSONString(couponRule));
-        couponBatchService.insertCouponBatch(couponBatch);
-        log.info("addCouponBatchAction success couponBatch:{}", JSON.toJSONString(couponRule));
-        return "coupon_batch_list";     // 跳转到券批次列表
+        return couponServiceClient.addCouponBatchAction(batchName, couponName, couponType,grantType, totalCount, startTime, endTime, thresholdAmount, discountAmount);
     }
 
+    @PostMapping("/coupon/sendCouponSynAction")
+    public String sendCouponSynAction(@RequestParam("batchId") long batchId, @RequestParam("userId") long userId) {
+        return couponServiceClient.sendCouponSynWithLock(batchId, userId);
+    }
+
+    @GetMapping("/coupon/queryUserCoupons")
+    public String queryUserCoupons(long userId) {
+        // TODO 这里的逻辑应该是反序列化成List进行处理再序列化发给前端吗
+        // 1线程下的jmeter压测QPS（开启虚拟线程）：queryUserCouponsWithoutCache-96，queryUserCoupons-102
+        return couponServiceClient.queryUserCouponList(userId);
+    }
 
 }

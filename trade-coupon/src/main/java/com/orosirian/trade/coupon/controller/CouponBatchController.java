@@ -6,24 +6,24 @@ import com.orosirian.trade.coupon.db.model.CouponRule;
 import com.orosirian.trade.coupon.service.CouponBatchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Controller
+@RestController
 public class CouponBatchController {
 
     @Autowired
     private CouponBatchService couponBatchService;
 
-    // TODO 暂时放在这
-    @RequestMapping("/addCouponBatchAction")
-    public String addCouponBatchAction(
+    @PostMapping("/batch/addCouponBatch")
+    public String addCouponBatch(
             @RequestParam("batchName") String batchName,
             @RequestParam("couponName") String couponName,
             @RequestParam("couponType") int couponType,
@@ -32,14 +32,13 @@ public class CouponBatchController {
             @RequestParam("startTime") String startTime,
             @RequestParam("endTime") String endTime,
             @RequestParam("thresholdAmount") int thresholdAmount,
-            @RequestParam("discountAmount") int discountAmount,
-            Map<String, Object> resultMap
+            @RequestParam("discountAmount") int discountAmount
     ) {
         // 构造优惠券规则
         CouponRule couponRule = new CouponRule();
         couponRule.setCouponType(couponType);
         couponRule.setGrantType(grantType);
-        couponRule.setStartTime(LocalDateTime.parse(startTime));  // 原先格式类似2026-01-26T17:24
+        couponRule.setStartTime(LocalDateTime.parse(startTime));  // 原先格式类似2026-01-26T17:24:30
         couponRule.setEndTime(LocalDateTime.parse(endTime));
         couponRule.setThresholdAmount(thresholdAmount);
         couponRule.setDiscountAmount(discountAmount);
@@ -57,19 +56,16 @@ public class CouponBatchController {
         couponBatch.setRule(JSON.toJSONString(couponRule));
         couponBatch.setStatus(1);   // 默认状态有效
         couponBatch.setCreateTime(LocalDateTime.now());
-        couponBatchService.insertCouponBatch(couponBatch);
+        boolean _ = couponBatchService.insertCouponBatch(couponBatch);
         log.info("addCouponBatchAction success couponBatch:{}", JSON.toJSONString(couponRule));
         return "coupon_batch_list";     // 跳转到券批次列表
     }
 
-
-
-    @RequestMapping("/coupon/couponBatchList")
+    @GetMapping("/batch/couponBatchList")
     public String couponBatchList(Map<String, Object> resultMap) {
         List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList();
         resultMap.put("couponBatchList", couponBatchList);
         return "coupon_batch_list";
     }
-
 
 }

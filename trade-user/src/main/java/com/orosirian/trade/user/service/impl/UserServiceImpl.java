@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Override
     public boolean insertUser(User user) {
         if (userMapper.isUserNameExist(user.getUserName())) {
             log.error("username already existed: {}", user.getUserName());
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.insertUser(user.getUserName(), hashedPassword, user.getTags()) > 0;
     }
 
+    @Override
     public boolean checkPassword(String userName, String loginPassword) {
         String hashedPassword = userMapper.selectLoginPassword(userName);
         if (hashedPassword == null || hashedPassword.isEmpty()) {

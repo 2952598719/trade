@@ -185,7 +185,14 @@
     <update id="updateSendCouponBatchCount" parameterType="java.lang.Long">
         UPDATE coupon_batch
         SET available_count = available_count - 1, assign_count = assign_count + 1
-        WHERE id = #{id, jdbcType=BIGINT}
+        WHERE id = #{batchId,jdbcType=BIGINT}
     </update>
+
+    <select id="selectCouponRule" resultType="java.lang.String">
+        SELECT rule
+        FROM coupon_batch
+        WHERE id = #{batchId,jdbcType=BIGINT}
+    </select>
+
 
 </mapper>

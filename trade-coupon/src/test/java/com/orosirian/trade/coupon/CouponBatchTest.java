@@ -22,7 +22,7 @@ public class CouponBatchTest {
 
     @Test
     public void addCouponBatchActionTest() {
-        assertThat(couponBatchController.addCouponBatchAction(
+        assertThat(couponBatchController.addCouponBatch(
                 "优惠券批次测试",
                 "满100减20优惠券",
                 1,
@@ -31,8 +31,7 @@ public class CouponBatchTest {
                 LocalDateTime.now().toString(),
                 LocalDateTime.of(2026, 12, 31, 23, 59, 59).toString(),
                 100,
-                20,
-                null
+                20
         )).isEqualTo("coupon_batch_list");
     }
 

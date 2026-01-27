@@ -10,4 +10,6 @@ public interface CouponBatchService {
 
     List<CouponBatch> queryCouponBatchList();
 
+    String selectCouponRule(long batchId);
+
 }

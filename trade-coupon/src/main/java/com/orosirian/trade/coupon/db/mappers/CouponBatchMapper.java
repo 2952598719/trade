@@ -23,6 +23,8 @@ public interface CouponBatchMapper {
     // 自定义语句
     List<CouponBatch> queryCouponBatchList();
 
-    int updateSendCouponBatchCount(Long id);
+    int updateSendCouponBatchCount(Long batchId);
+
+    String selectCouponRule(Long batchId);
 
 }

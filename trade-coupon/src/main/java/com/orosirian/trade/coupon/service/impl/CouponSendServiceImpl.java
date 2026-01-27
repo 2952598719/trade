@@ -13,6 +13,7 @@ import com.orosirian.trade.coupon.utils.Constants;
 import com.orosirian.trade.coupon.utils.DistributedLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,9 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class CouponSendServiceImpl implements CouponSendService {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private DistributedLock distributedLock;
@@ -36,17 +40,17 @@ public class CouponSendServiceImpl implements CouponSendService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean sendUserCouponSynWithLock(long batchId, long userId) {
-        String lockKey = "sendUserCoupon";
+
         String requestId = UUID.randomUUID().toString();
         try {
-            if (distributedLock.tryGetLock(lockKey, requestId, Duration.ofSeconds(Constants.EXPIRE_TIME_SECOND))) {
+            if (distributedLock.tryGetLock(Constants.LOCK_KEY, requestId, Duration.ofSeconds(Constants.EXPIRE_TIME_SECOND))) {
                 return sendUserCouponSyn(batchId, userId);
             }
         } catch (Exception e) {
             log.error("sendUserCouponSynWithLock error batchId={} userId={}", batchId, userId, e);
             throw new BizException(e.getMessage());
         } finally {
-            boolean _ = distributedLock.releaseLock(lockKey, requestId);
+            boolean _ = distributedLock.releaseLock(Constants.LOCK_KEY, requestId);
         }
         return false;
     }
@@ -55,7 +59,7 @@ public class CouponSendServiceImpl implements CouponSendService {
     @Transactional(rollbackFor = Exception.class)
     public boolean sendUserCouponSyn(long batchId, long userId) {   // 同步发券给单个用户
         // 1. 查询batch信息
-        // TODO 是否应该检查用户表中存在userId，但这里涉及到服务间通信，先放在这
+        // TODO 用户存在性或许应该在网关层检查？
         CouponBatch couponBatch = couponBatchMapper.queryCouponBatchById(batchId);
         if (couponBatch == null) {
             log.error("coupon batch is not exist: batchId={}, userId={}", batchId, userId);
@@ -79,6 +83,9 @@ public class CouponSendServiceImpl implements CouponSendService {
             log.error("insert coupon failed: batchId={}, userId={}", batchId, userId);
             throw new BizException("新增该用户券记录失败");
         }
+        // 5. 现在的主流做法就是先更新数据库，再删除缓存
+        stringRedisTemplate.delete(Constants.LIST_KEY_PREFIX + userId);
+
         log.info("sendUserCouponSyn success: coupon info: {}", JSON.toJSONString(coupon));
         return true;
     }
@@ -97,7 +104,7 @@ public class CouponSendServiceImpl implements CouponSendService {
         coupon.setReceivedTime(LocalDateTime.now());     // 当前系统日期
         coupon.setValidateTime(couponRule.getEndTime());
         coupon.setCouponName(couponBatch.getCouponName());
-        coupon.setStatus(1);    // 默认有效
+        coupon.setStatus(0);    // 默认有效
         coupon.setCreateTime(LocalDateTime.now());
         return coupon;
     }

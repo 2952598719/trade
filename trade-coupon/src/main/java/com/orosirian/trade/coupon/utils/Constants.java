@@ -12,4 +12,10 @@ public class Constants {
 
     public static int EXPIRE_TIME_SECOND = 30;
 
+    public static String LOCK_KEY = "sendUserCouponLock";
+
+    public static String LIST_KEY_PREFIX = "coupon:list:";
+
+    public static String RULE_KEY_PREFIX = "coupon:rule:";
+
 }

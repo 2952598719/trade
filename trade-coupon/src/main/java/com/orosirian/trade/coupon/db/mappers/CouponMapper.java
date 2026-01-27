@@ -3,6 +3,8 @@ package com.orosirian.trade.coupon.db.mappers;
 import com.orosirian.trade.coupon.db.model.Coupon;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface CouponMapper {
 
@@ -17,5 +19,8 @@ public interface CouponMapper {
     int updateByPrimaryKeySelective(Coupon row);
 
     int updateByPrimaryKey(Coupon row);
+
+    List<Coupon> queryUserCoupon(long userId);
+
 
 }
