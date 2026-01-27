@@ -1,6 +1,5 @@
 package com.orosirian.trade.user.service.impl;
 
-import com.orosirian.trade.user.db.dao.UserDao;
 import com.orosirian.trade.user.db.mappers.UserMapper;
 import com.orosirian.trade.user.db.model.User;
 import com.orosirian.trade.user.service.UserService;

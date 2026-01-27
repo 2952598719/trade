@@ -1,4 +1,4 @@
-package com.orosirian.trade.admin;
+package com.orosirian.trade.api;
 
 import org.springframework.boot.test.context.SpringBootTest;
 

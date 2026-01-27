@@ -4,14 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.db.model.CouponBatch;
 import com.orosirian.trade.coupon.db.model.CouponRule;
 import com.orosirian.trade.coupon.service.CouponBatchService;
-import com.orosirian.trade.coupon.service.CouponSendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,9 +20,6 @@ public class CouponBatchController {
 
     @Autowired
     private CouponBatchService couponBatchService;
-
-    @Autowired
-    private CouponSendService couponSendService;
 
     // TODO 暂时放在这
     @RequestMapping("/addCouponBatchAction")
@@ -68,18 +62,7 @@ public class CouponBatchController {
         return "coupon_batch_list";     // 跳转到券批次列表
     }
 
-    @RequestMapping("/coupon/sendSyn/{batchId}/{userId}")
-    @ResponseBody
-    public String sendCouponSyn(@PathVariable long batchId, @PathVariable long userId) {
-        try {
-            log.info("batchId: {}, userId: {}", batchId, userId);
-            couponSendService.sendUserCouponSyn(batchId, userId);
-            return "优惠券发放成功";
-        } catch (Exception e) {
-            log.error("sendCouponSyn error, errorMessage:{}", e.getMessage());
-            return "发放优惠券给用户失败,原因:" + e.getMessage();
-        }
-    }
+
 
     @RequestMapping("/coupon/couponBatchList")
     public String couponBatchList(Map<String, Object> resultMap) {

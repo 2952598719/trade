@@ -9,22 +9,47 @@ import com.orosirian.trade.coupon.db.model.CouponBatch;
 import com.orosirian.trade.coupon.db.model.CouponRule;
 import com.orosirian.trade.coupon.service.CouponSendService;
 import com.orosirian.trade.coupon.utils.BizException;
+import com.orosirian.trade.coupon.utils.Constants;
+import com.orosirian.trade.coupon.utils.DistributedLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @Service
 public class CouponSendServiceImpl implements CouponSendService {
 
     @Autowired
+    private DistributedLock distributedLock;
+
+    @Autowired
     private CouponBatchMapper couponBatchMapper;
 
     @Autowired
     private CouponMapper couponMapper;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean sendUserCouponSynWithLock(long batchId, long userId) {
+        String lockKey = "sendUserCoupon";
+        String requestId = UUID.randomUUID().toString();
+        try {
+            if (distributedLock.tryGetLock(lockKey, requestId, Duration.ofSeconds(Constants.EXPIRE_TIME_SECOND))) {
+                return sendUserCouponSyn(batchId, userId);
+            }
+        } catch (Exception e) {
+            log.error("sendUserCouponSynWithLock error batchId={} userId={}", batchId, userId, e);
+            throw new BizException(e.getMessage());
+        } finally {
+            boolean _ = distributedLock.releaseLock(lockKey, requestId);
+        }
+        return false;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -39,20 +64,20 @@ public class CouponSendServiceImpl implements CouponSendService {
         // 2. 判断该batch中券余量
         if (couponBatch.getAvailableCount() <= 0) {
             log.error("couponBatch availableCount is not enough: batchId={}, userId={}", batchId, userId);
-            throw new BizException("券批次中，券余量不足");
+            throw new BizException("券余量不足");
         }
         // 3. 券批次表更新：券余量、已发送数量
         boolean updateSendCouponBatchRes = couponBatchMapper.updateSendCouponBatchCount(couponBatch.getId()) > 0;
         if (!updateSendCouponBatchRes) {
             log.error("update couponBatch remains failed: batchId={}, userId={}", batchId, userId);
-            throw new BizException("券批次中，更新券的数量失败");
+            throw new BizException("更新券数量失败");
         }
         // 4. 券表新增：该用户获取优惠券记录
         Coupon coupon = createCoupon(couponBatch, userId);
         boolean insertCouponRes = couponMapper.insertCoupon(coupon) > 0;
         if (!insertCouponRes) {
             log.error("insert coupon failed: batchId={}, userId={}", batchId, userId);
-            throw new BizException("券表中，新增该用户优惠券记录失败");
+            throw new BizException("新增该用户券记录失败");
         }
         log.info("sendUserCouponSyn success: coupon info: {}", JSON.toJSONString(coupon));
         return true;

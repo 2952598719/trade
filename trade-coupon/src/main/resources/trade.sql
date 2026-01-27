@@ -2,6 +2,7 @@ CREATE DATABASE trade;
 
 USE trade;
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户id',
     `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名称',
@@ -10,7 +11,7 @@ CREATE TABLE `user` (
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
-
+DROP TABLE IF EXISTS `coupon_batch`;
 CREATE TABLE `coupon_batch` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '批次id',
     `batch_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '批次名称',
@@ -25,8 +26,9 @@ CREATE TABLE `coupon_batch` (
     `status` int NOT NULL COMMENT '活动的状态1有效，-1无效',
     `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
+DROP TABLE IF EXISTS `coupon_user`;
 CREATE TABLE `coupon_user` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '优惠券的id',
     `user_id` bigint NOT NULL COMMENT '用户id',

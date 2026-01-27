@@ -19,7 +19,7 @@
     <modules>
         <module>trade-user</module>
         <module>trade-coupon</module>
-        <module>trade-admin</module>
+        <module>trade-api</module>
     </modules>
 
     <properties>

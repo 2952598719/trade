@@ -17,15 +17,15 @@ public class UserTest {
     @Test
     public void insertUser() {
         User user = new User();
-        user.setUserName("Jack1");
+        user.setUserName("Jack");
         user.setLoginPassword("111111");
-        user.setTags("Rose1");
+        user.setTags("Rose");
         assertThat(userService.insertUser(user)).isTrue();
     }
 
     @Test
     public void checkPassword() {
-        assertThat(userService.checkPassword("Jack1", "111111")).isTrue();
+        assertThat(userService.checkPassword("Jack", "111111")).isTrue();
     }
 
 }

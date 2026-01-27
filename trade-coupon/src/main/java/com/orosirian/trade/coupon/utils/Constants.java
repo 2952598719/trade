@@ -1,0 +1,15 @@
+package com.orosirian.trade.coupon.utils;
+
+public class Constants {
+
+    public static int MAX_RETRY_COUNT = 5;
+
+    public static long INIT_WAIT_TIME_MS = 100;
+
+    public static long MAX_WAIT_TIME_MS = 1000;
+
+    public static int WAIT_TIME_DISTURB = 50;
+
+    public static int EXPIRE_TIME_SECOND = 30;
+
+}
