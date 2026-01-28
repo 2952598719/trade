@@ -8,7 +8,6 @@ public interface CouponSendService {
 
     boolean sendUserCouponSyn(long batchId, long userId);
 
-    // TODO 这里为什么是Set而不是List
     boolean sendUserCouponBatch(long batchId, Set<Long> userIdSet);
 
 }

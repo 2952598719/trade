@@ -2,7 +2,7 @@ package com.orosirian.trade.coupon.db.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 public class Task {
@@ -19,10 +19,10 @@ public class Task {
 
     private String bizParam;
 
-    private LocalDateTime scheduleTime;
+    private Instant scheduleTime;
 
-    private LocalDateTime modifiedTime;
+    private Instant modifiedTime;
 
-    private LocalDateTime createTime;
+    private Instant createTime;
 
 }

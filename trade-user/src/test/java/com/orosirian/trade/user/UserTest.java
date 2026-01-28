@@ -16,11 +16,13 @@ public class UserTest {
 
     @Test
     public void insertUser() {
-        User user = new User();
-        user.setUserName("Jack3");
-        user.setLoginPassword("111111");
-        user.setTags("Rose3");
-        assertThat(userService.insertUser(user)).isTrue();
+        for (int i = 1; i <= 4; i++) {
+            User user = new User();
+            user.setUserName("Jack" + i);
+            user.setLoginPassword("111111");
+            user.setTags("Rose" + i);
+            assertThat(userService.insertUser(user)).isTrue();
+        }
     }
 
     @Test

@@ -2,8 +2,7 @@ package com.orosirian.trade.coupon.db.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 public class CouponBatch {
@@ -30,6 +29,6 @@ public class CouponBatch {
 
     private Integer status;
 
-    private LocalDateTime createTime;
+    private Instant createTime;
 
 }

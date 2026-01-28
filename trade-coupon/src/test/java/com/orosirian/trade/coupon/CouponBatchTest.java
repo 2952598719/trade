@@ -7,9 +7,13 @@ import com.orosirian.trade.coupon.db.model.CouponBatch;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.assertj.core.api.Assertions.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class CouponBatchTest {
@@ -22,14 +26,17 @@ public class CouponBatchTest {
 
     @Test
     public void addCouponBatchActionTest() {
+        Instant start = Instant.now();
+        Instant end = ZonedDateTime.of(LocalDateTime.of(2026, 12, 31, 23, 59, 59), ZoneId.of("Asia/Shanghai")).toInstant();
+
         assertThat(couponBatchController.addCouponBatch(
                 "优惠券批次测试",
                 "满100减20优惠券",
                 1,
                 1,
                 100L,
-                LocalDateTime.now().toString(),
-                LocalDateTime.of(2026, 12, 31, 23, 59, 59).toString(),
+                start.toString(),
+                end.toString(),
                 100,
                 20
         )).isEqualTo("coupon_batch_list");

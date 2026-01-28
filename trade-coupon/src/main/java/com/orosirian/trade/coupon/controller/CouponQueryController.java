@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +94,8 @@ public class CouponQueryController {
             couponVO.setThresholdAmountStr(String.format("满 %d 减 %d 元", rule.getThresholdAmount(), rule.getDiscountAmount()));
         }
         couponVO.setDiscountAmount(rule.getDiscountAmount());
-        couponVO.setStartTimeToEndTime(rule.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE) + "~" + rule.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        couponVO.setStartTimeToEndTime(rule.getStartTime().toString() + "~" + rule.getEndTime().toString());
+//        couponVO.setStartTimeToEndTime(rule.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE) + "~" + rule.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE));
         return couponVO;
     }
 

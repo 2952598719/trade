@@ -2,8 +2,7 @@ package com.orosirian.trade.coupon.db.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 public class CouponRule {
@@ -12,9 +11,9 @@ public class CouponRule {
 
     private int grantType;          // 发放类型：1-用户领取，2-系统自动发放，3-兑换码兑换
 
-    private LocalDateTime startTime;         // 优惠券使用有效期开始时间
+    private Instant startTime;         // 优惠券使用有效期开始时间
 
-    private LocalDateTime endTime;           // 优惠券使用有效期结束时间
+    private Instant endTime;           // 优惠券使用有效期结束时间
 
     private int thresholdAmount;    // 优惠券使用的门槛金额
 

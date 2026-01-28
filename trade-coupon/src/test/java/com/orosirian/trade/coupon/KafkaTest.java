@@ -13,7 +13,7 @@ public class KafkaTest {
 
     @Test
     public void sendMessage() {
-        String message = "习近平";
+        String message = "测试";
         messageSender.send("test-topic", message);
     }
 

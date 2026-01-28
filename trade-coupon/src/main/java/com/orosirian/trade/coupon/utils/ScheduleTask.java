@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -36,7 +36,7 @@ public class ScheduleTask {
 
     @Scheduled(cron = "0/30 * * * * ?")
     private void couponFailedTaskRetry() {
-        System.out.println("执行发券定时任务时间: " + LocalDateTime.now());
+        System.out.println("执行发券定时任务时间: " + Instant.now().toString());
         List<Task> tasks = taskMapper.queryFailedTaskList();
         for (Task task : tasks) {
             log.info("processing failed task : {}", JSON.toJSONString(task));
@@ -50,14 +50,14 @@ public class ScheduleTask {
                 task.setRetryCount(task.getRetryCount() + 1);
                 log.info("task retry failed: {} ", task.getBizParam());
             }
-            task.setModifiedTime(LocalDateTime.now());
+            task.setModifiedTime(Instant.now());
             taskMapper.updateTask(task);
         }
     }
 
     @Scheduled(cron = "0 0 9 * * ?")
     private void couponRemindTask() {
-        log.info("执行提醒使用券任务: {}", LocalDateTime.now());
+        log.info("执行提醒使用券任务: {}", Instant.now().toString());
         couponRemindService.runCouponRemindTask();
     }
 

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Slf4j
 @Component
@@ -56,7 +56,7 @@ public class MessageReceiver {
                 TaskIdempotent curIdempotent = new TaskIdempotent();
                 curIdempotent.setBizType(task.getBizType());
                 curIdempotent.setBizId(task.getBizId());
-                curIdempotent.setCreateTime(LocalDateTime.now());
+                curIdempotent.setCreateTime(Instant.now());
                 idempotentMapper.insertIdempotent(curIdempotent);
             } else {
                 throw new BizException("sendUserCouponSynWithLock error");
@@ -68,7 +68,7 @@ public class MessageReceiver {
             task.setRetryCount(task.getRetryCount() + 1);   // 失败了，重试次数+1
             log.info("consumeBatchCouponMessage failed sendCouponTaskModel:{} ", task.getBizParam(), ex);
         }
-        task.setModifiedTime(LocalDateTime.now());
+        task.setModifiedTime(Instant.now());
         taskMapper.updateTask(task);
     }
 

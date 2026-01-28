@@ -4,7 +4,6 @@ package com.orosirian.trade.coupon.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.db.mappers.CouponMapper;
 import com.orosirian.trade.coupon.db.mappers.TaskMapper;
-import com.orosirian.trade.coupon.db.model.Coupon;
 import com.orosirian.trade.coupon.db.model.CouponRule;
 import com.orosirian.trade.coupon.db.model.Task;
 import com.orosirian.trade.coupon.db.model.TaskRemind;
@@ -14,7 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class CouponRemindServiceImpl implements CouponRemindService {
         TaskRemind taskRemind = new TaskRemind();
         taskRemind.setUserId(userId);
         taskRemind.setCouponId(couponId);
-        taskRemind.setRemindTime(rule.getEndTime().minusDays(Constants.REMIND_BEFORE_DAYS));
+        taskRemind.setRemindTime(rule.getEndTime().minus(Constants.REMIND_BEFORE_DAYS, ChronoUnit.DAYS));
 
         Task task = new Task();
         task.setStatus(0);
@@ -41,9 +41,9 @@ public class CouponRemindServiceImpl implements CouponRemindService {
         task.setBizType("remind_coupon");
         task.setBizId(UUID.randomUUID().toString());
         task.setBizParam(JSON.toJSONString(taskRemind));
-        task.setScheduleTime(rule.getEndTime().minusDays(Constants.REMIND_BEFORE_DAYS));
-        task.setModifiedTime(LocalDateTime.now());
-        task.setCreateTime(LocalDateTime.now());
+        task.setScheduleTime(rule.getEndTime().minus(Constants.REMIND_BEFORE_DAYS, ChronoUnit.DAYS));
+        task.setModifiedTime(Instant.now());
+        task.setCreateTime(Instant.now());
         log.info("insertCouponRemindTask ,task:{}", JSON.toJSONString(task));
         return taskMapper.insertTask(task);
     }

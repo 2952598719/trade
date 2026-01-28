@@ -15,7 +15,7 @@ public class RedisTest {
 
     @Test
     public void setValue() {
-        redisTemplate.opsForValue().set("testName","你好");
+        redisTemplate.opsForValue().set("testName", "你好");
     }
 
     @Test

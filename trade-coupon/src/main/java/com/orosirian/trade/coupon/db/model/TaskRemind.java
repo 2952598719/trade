@@ -2,7 +2,7 @@ package com.orosirian.trade.coupon.db.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 public class TaskRemind {
@@ -11,6 +11,6 @@ public class TaskRemind {
 
     long couponId;
 
-    LocalDateTime remindTime;
+    Instant remindTime;
 
 }

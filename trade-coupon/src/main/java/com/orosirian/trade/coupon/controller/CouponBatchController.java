@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +42,8 @@ public class CouponBatchController {
         CouponRule couponRule = new CouponRule();
         couponRule.setCouponType(couponType);
         couponRule.setGrantType(grantType);
-        couponRule.setStartTime(LocalDateTime.parse(startTime));  // 原先格式类似2026-01-26T17:24:30
-        couponRule.setEndTime(LocalDateTime.parse(endTime));
+        couponRule.setStartTime(Instant.parse(startTime));  // 原先格式类似2026-01-26T17:24:30
+        couponRule.setEndTime(Instant.parse(endTime));
         couponRule.setThresholdAmount(thresholdAmount);
         couponRule.setDiscountAmount(discountAmount);
 
@@ -59,7 +59,7 @@ public class CouponBatchController {
         couponBatch.setUsedCount(0L);
         couponBatch.setRule(JSON.toJSONString(couponRule));
         couponBatch.setStatus(1);   // 默认状态有效
-        couponBatch.setCreateTime(LocalDateTime.now());
+        couponBatch.setCreateTime(Instant.now());
         boolean _ = couponBatchService.insertCouponBatch(couponBatch);
         log.info("addCouponBatchAction success couponBatch:{}", JSON.toJSONString(couponRule));
         return "coupon_batch_list";     // 跳转到券批次列表
@@ -73,8 +73,8 @@ public class CouponBatchController {
     }
 
     @PostMapping("/kafka")
-    public void kafkaTest() {
-        messageSender.send("test-topic", "习近平");
+    public void kafkaTest(@RequestParam String message) {
+        messageSender.send("test-topic", message);
     }
 
 }

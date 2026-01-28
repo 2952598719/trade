@@ -1,9 +1,8 @@
 package com.orosirian.trade.coupon.db.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 public class TaskIdempotent {
@@ -14,6 +13,6 @@ public class TaskIdempotent {
 
     private String bizId;
 
-    private LocalDateTime createTime;
+    private Instant createTime;
 
 }

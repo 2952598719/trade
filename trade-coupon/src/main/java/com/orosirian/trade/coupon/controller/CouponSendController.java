@@ -49,7 +49,7 @@ public class CouponSendController {
     public String sendUserCouponBatch(@RequestParam("batchId") long batchId, @RequestParam("userIds") String userIds) {
         try {
             String[] userIdsSplit = userIds.split("\r\n");
-            Set<Long> userIdSet = new HashSet<>();
+            Set<Long> userIdSet = new HashSet<>();  // Set避免前端某个用户id重复导致多发
             for (String userId : userIdsSplit) {
                 if (userId != null && !userId.isEmpty()) {
                     userIdSet.add(Long.valueOf(userId));

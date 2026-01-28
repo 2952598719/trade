@@ -2,8 +2,7 @@ package com.orosirian.trade.coupon.db.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 public class Coupon {
@@ -20,12 +19,12 @@ public class Coupon {
 
     private Long orderId;
 
-    private LocalDateTime receivedTime;
+    private Instant receivedTime;
 
-    private LocalDateTime validateTime;
+    private Instant validateTime;
 
-    private LocalDateTime usedTime;
+    private Instant usedTime;
 
-    private LocalDateTime createTime;
+    private Instant createTime;
 
 }

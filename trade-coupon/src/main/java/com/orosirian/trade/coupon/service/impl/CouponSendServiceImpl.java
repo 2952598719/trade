@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -111,14 +111,15 @@ public class CouponSendServiceImpl implements CouponSendService {
             TaskSend taskSend = new TaskSend(batchId, userId);
 
             Task task = new Task();
-            task.setStatus(0);  //
+            task.setStatus(0);
             task.setRetryCount(0);
             task.setBizType("send_coupon");
             task.setBizId(UUID.randomUUID().toString());
             task.setBizParam(JSON.toJSONString(taskSend));
-            task.setModifiedTime(LocalDateTime.now());
-            task.setCreateTime(LocalDateTime.now());
+            task.setModifiedTime(Instant.now());
+            task.setCreateTime(Instant.now());
 
+            // 由于insertTask的xml标签具有useGeneratedKeys="true" keyProperty="id"，因此插入结束后task自动附加上了id
             boolean res = taskMapper.insertTask(task);
             if (res) {  // 插入任务记录，成功再发送消息
                 // 进kafka容器的/opt/kafka，bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic send-batch-coupon
@@ -142,11 +143,11 @@ public class CouponSendServiceImpl implements CouponSendService {
         Coupon coupon = new Coupon();
         coupon.setUserId(userId);
         coupon.setBatchId(couponBatch.getId());
-        coupon.setReceivedTime(LocalDateTime.now());     // 当前系统日期
+        coupon.setReceivedTime(Instant.now());     // 当前系统日期
         coupon.setValidateTime(couponRule.getEndTime());
         coupon.setCouponName(couponBatch.getCouponName());
         coupon.setStatus(0);    // 默认有效
-        coupon.setCreateTime(LocalDateTime.now());
+        coupon.setCreateTime(Instant.now());
         return coupon;
     }
 

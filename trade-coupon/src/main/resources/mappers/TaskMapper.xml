@@ -18,7 +18,7 @@
         id, status, retry_count, biz_type, biz_id, biz_param, schedule_time, modified_time, create_time
     </sql>
 
-    <insert id="insertTask" parameterType="com.orosirian.trade.coupon.db.model.Task">
+    <insert id="insertTask" useGeneratedKeys="true" keyProperty="id" parameterType="com.orosirian.trade.coupon.db.model.Task">
         INSERT
         INTO task(status, retry_count, biz_type, biz_id, biz_param, schedule_time, modified_time, create_time)
         VALUES (#{status,jdbcType=INTEGER}, #{retryCount,jdbcType=INTEGER},
