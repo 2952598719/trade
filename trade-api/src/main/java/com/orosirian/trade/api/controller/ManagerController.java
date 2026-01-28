@@ -12,7 +12,7 @@ public class ManagerController {
     @Autowired
     private CouponServiceClient couponServiceClient;
 
-    @PostMapping("/coupon/addCouponBatchAction")
+    @PostMapping("/batch/addCouponBatchAction")
     public String addCouponBatchAction(
             @RequestParam("batchName") String batchName,
             @RequestParam("couponName") String couponName,
@@ -27,16 +27,22 @@ public class ManagerController {
         return couponServiceClient.addCouponBatchAction(batchName, couponName, couponType,grantType, totalCount, startTime, endTime, thresholdAmount, discountAmount);
     }
 
-    @PostMapping("/coupon/sendCouponSynAction")
+    @PostMapping("/send/sendCouponSynAction")
     public String sendCouponSynAction(@RequestParam("batchId") long batchId, @RequestParam("userId") long userId) {
         return couponServiceClient.sendCouponSynWithLock(batchId, userId);
     }
 
-    @GetMapping("/coupon/queryUserCoupons")
-    public String queryUserCoupons(long userId) {
+    @GetMapping("/query/queryUserCoupons")
+    public String queryUserCoupons(@RequestParam("userId") long userId) {
         // TODO 这里的逻辑应该是反序列化成List进行处理再序列化发给前端吗
         // 1线程下的jmeter压测QPS（开启虚拟线程）：queryUserCouponsWithoutCache-96，queryUserCoupons-102
         return couponServiceClient.queryUserCouponList(userId);
+    }
+
+    @PostMapping("/send/sendBatch")
+    public String sendUserCouponBatch(@RequestParam("batchId") long batchId, @RequestParam("userIds") String userIds) {
+        // \r\n用%0D%0A替代
+        return couponServiceClient.sendUserCouponBatch(batchId, userIds);
     }
 
 }

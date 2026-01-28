@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Slf4j
 @RestController
 public class CouponSendController {
@@ -37,7 +40,26 @@ public class CouponSendController {
             return "优惠券发放成功";
         } catch (Exception e) {
             log.error("sendCouponSyn error, errorMessage:{}", e.getMessage());
-            return "发放优惠券给用户失败,原因:" + e.getMessage();
+            return "优惠券发放失败, 原因:" + e.getMessage();
+        }
+    }
+
+    @PostMapping("/send/sendBatch")
+    @ResponseBody
+    public String sendUserCouponBatch(@RequestParam("batchId") long batchId, @RequestParam("userIds") String userIds) {
+        try {
+            String[] userIdsSplit = userIds.split("\r\n");
+            Set<Long> userIdSet = new HashSet<>();
+            for (String userId : userIdsSplit) {
+                if (userId != null && !userId.isEmpty()) {
+                    userIdSet.add(Long.valueOf(userId));
+                }
+            }
+            boolean _ = couponSendService.sendUserCouponBatch(batchId, userIdSet);
+            return "优惠券批量发放成功";
+        } catch (Exception e) {
+            log.error("sendCouponBatch error, errorMessage:{}", e.getMessage());
+            return "优惠券批量发放失败, 原因:" + e.getMessage();
         }
     }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orosirian.trade.coupon.db.mappers.IdempotentMapper">
+
+    <resultMap id="BaseResultMap" type="com.orosirian.trade.coupon.db.model.TaskIdempotent">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+        <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, biz_type, biz_id, create_time
+    </sql>
+
+    <insert id="insertIdempotent" parameterType="com.orosirian.trade.coupon.db.model.TaskIdempotent">
+        INSERT
+        INTO idempotent(biz_type, biz_id, create_time)
+        VALUES (#{bizType}, #{bizId}, #{createTime})
+    </insert>
+
+    <select id="queryIdempotentByBiz" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM idempotent
+        WHERE biz_type = #{bizType} AND biz_id = #{bizId}
+    </select>
+
+
+</mapper>

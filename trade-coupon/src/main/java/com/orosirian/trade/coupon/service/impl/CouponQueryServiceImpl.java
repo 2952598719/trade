@@ -28,7 +28,7 @@ public class CouponQueryServiceImpl implements CouponQueryService {
         if (cacheContent != null) {
             return JSON.parseObject(cacheContent, new TypeReference<>() {});
         } else {
-            List<Coupon> list = couponMapper.queryUserCoupon(userId);
+            List<Coupon> list = couponMapper.queryUserCouponList(userId);
             stringRedisTemplate.opsForValue().set(cacheKey, JSON.toJSONString(list));
             return list;
         }
@@ -36,7 +36,7 @@ public class CouponQueryServiceImpl implements CouponQueryService {
 
     @Override
     public List<Coupon> queryUserCouponListWithoutCache(long userId) {
-        return couponMapper.queryUserCoupon(userId);
+        return couponMapper.queryUserCouponList(userId);
     }
 
 }

@@ -58,4 +58,13 @@ public class CouponServiceClient {
         );
     }
 
+    public String sendUserCouponBatch(long batchId, String userIds) {
+        String params = String.format("?batchId=%d&userIds=%s", batchId, userIds);
+        return restTemplate.postForObject(
+                couponServiceUrl + "/send/sendBatch" + params,
+                null,
+                String.class
+        );
+    }
+
 }

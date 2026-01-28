@@ -28,11 +28,11 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
     <insert id="insertCoupon" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
-        insert into coupon_user (id, user_id, batch_id,
+        insert into coupon_user (user_id, batch_id,
                                  coupon_name, status, order_id,
                                  received_time, validate_time, used_time,
                                  create_time)
-        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{batchId,jdbcType=BIGINT},
+        values (#{userId,jdbcType=BIGINT}, #{batchId,jdbcType=BIGINT},
                 #{couponName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{orderId,jdbcType=BIGINT},
                 #{receivedTime,jdbcType=TIMESTAMP}, #{validateTime,jdbcType=TIMESTAMP}, #{usedTime,jdbcType=TIMESTAMP},
                 #{createTime,jdbcType=TIMESTAMP})
@@ -40,9 +40,6 @@
     <insert id="insertSelective" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
         insert into coupon_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
             <if test="userId != null">
                 user_id,
             </if>
@@ -72,9 +69,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
             <if test="userId != null">
                 #{userId,jdbcType=BIGINT},
             </if>
@@ -151,7 +145,7 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <select id="queryUserCoupon" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    <select id="queryUserCouponList" resultMap="BaseResultMap" parameterType="java.lang.Long">
         SELECT <include refid="Base_Column_List"/>
         FROM coupon_user
         WHERE user_id = #{userId,jdbcType=BIGINT}

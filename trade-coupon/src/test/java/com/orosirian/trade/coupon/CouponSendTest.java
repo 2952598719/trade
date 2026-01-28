@@ -20,7 +20,7 @@ public class CouponSendTest {
 
     @Test
     public void sendCouponTest() {
-        assertThat(couponSendService.sendUserCouponSyn(12L, 1L)).isTrue();
+        assertThat(couponSendService.sendUserCouponSyn(1L, 1L)).isTrue();
     }
 
 }

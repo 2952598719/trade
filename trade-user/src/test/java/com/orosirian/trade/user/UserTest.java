@@ -17,9 +17,9 @@ public class UserTest {
     @Test
     public void insertUser() {
         User user = new User();
-        user.setUserName("Jack");
+        user.setUserName("Jack3");
         user.setLoginPassword("111111");
-        user.setTags("Rose");
+        user.setTags("Rose3");
         assertThat(userService.insertUser(user)).isTrue();
     }
 

@@ -20,7 +20,7 @@ public interface CouponMapper {
 
     int updateByPrimaryKey(Coupon row);
 
-    List<Coupon> queryUserCoupon(long userId);
+    List<Coupon> queryUserCouponList(long userId);
 
 
 }

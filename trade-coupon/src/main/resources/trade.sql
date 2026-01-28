@@ -43,5 +43,26 @@ CREATE TABLE `coupon_user` (
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
+DROP TABLE IF EXISTS `task`;
+CREATE TABLE `task` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '任务id',
+    `status` INT NOT NULL COMMENT '任务状态，0-未完成，1-已完成，2-已失败',
+    `retry_count` INT NOT NULL COMMENT '重试次数',
+    `biz_type` VARCHAR(64) NOT NULL COMMENT '任务类型描述',
+    `biz_id` VARCHAR(128) NOT NULL COMMENT '任务id',
+    `biz_param` VARCHAR(255) NOT NULL COMMENT '任务信息',
+    `schedule_time` datetime DEFAULT NULL COMMENT '计划完成时间，用于任务类型：过期提醒',
+    `modified_time` datetime DEFAULT NULL COMMENT '状态更新时间',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
-
+DROP TABLE IF EXISTS `idempotent`;
+CREATE TABLE `idempotent` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `biz_type` varchar(64) COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务类型',
+    `biz_id` varchar(128) COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务ID',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `unique` (`biz_type`,`biz_id`) USING BTREE COMMENT '唯一索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

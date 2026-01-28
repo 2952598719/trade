@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orosirian.trade.coupon.db.mappers.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.orosirian.trade.coupon.db.model.Task">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="retry_count" jdbcType="INTEGER" property="retryCount" />
+        <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+        <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
+        <result column="biz_param" jdbcType="VARCHAR" property="bizParam" />
+        <result column="schedule_time" jdbcType="TIMESTAMP" property="scheduleTime" />
+        <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, status, retry_count, biz_type, biz_id, biz_param, schedule_time, modified_time, create_time
+    </sql>
+
+    <insert id="insertTask" parameterType="com.orosirian.trade.coupon.db.model.Task">
+        INSERT
+        INTO task(status, retry_count, biz_type, biz_id, biz_param, schedule_time, modified_time, create_time)
+        VALUES (#{status,jdbcType=INTEGER}, #{retryCount,jdbcType=INTEGER},
+                #{bizType,jdbcType=VARCHAR}, #{bizId,jdbcType=VARCHAR}, #{bizParam,jdbcType=VARCHAR},
+                #{scheduleTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateTask" parameterType="com.orosirian.trade.coupon.db.model.Task">
+        UPDATE task
+        SET status = #{status,jdbcType=INTEGER},
+            retry_count = #{retryCount,jdbcType=INTEGER},
+            biz_type = #{bizType,jdbcType=VARCHAR},
+            biz_id = #{bizId,jdbcType=VARCHAR},
+            biz_param = #{bizParam,jdbcType=VARCHAR},
+            schedule_time = #{scheduleTime,jdbcType=TIMESTAMP},
+            modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="queryTaskById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT <include refid="Base_Column_List"/>
+        FROM task
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="queryFailedTaskList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM task
+        WHERE status = 2 LIMIT 100  # 每次重试100条失败任务
+    </select>
+
+</mapper>

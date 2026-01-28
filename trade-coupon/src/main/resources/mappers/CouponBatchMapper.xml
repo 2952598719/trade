@@ -30,12 +30,12 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
     <insert id="insertCouponBatch" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
-        insert into coupon_batch (id, batch_name, coupon_name,
+        insert into coupon_batch (batch_name, coupon_name,
                                   coupon_type, grant_type, total_count,
                                   available_count, assign_count, used_count,
                                   rule, status, create_time
         )
-        values (#{id,jdbcType=BIGINT}, #{batchName,jdbcType=VARCHAR}, #{couponName,jdbcType=VARCHAR},
+        values (#{batchName,jdbcType=VARCHAR}, #{couponName,jdbcType=VARCHAR},
                 #{couponType,jdbcType=INTEGER}, #{grantType,jdbcType=INTEGER}, #{totalCount,jdbcType=BIGINT},
                 #{availableCount,jdbcType=BIGINT}, #{assignCount,jdbcType=BIGINT}, #{usedCount,jdbcType=BIGINT},
                 #{rule,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
@@ -44,9 +44,6 @@
     <insert id="insertSelective" parameterType="com.orosirian.trade.coupon.db.model.CouponBatch">
         insert into coupon_batch
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
             <if test="batchName != null">
                 batch_name,
             </if>
@@ -82,9 +79,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
             <if test="batchName != null">
                 #{batchName,jdbcType=VARCHAR},
             </if>

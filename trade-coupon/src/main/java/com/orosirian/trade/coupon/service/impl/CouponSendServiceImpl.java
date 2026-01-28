@@ -4,9 +4,9 @@ package com.orosirian.trade.coupon.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.db.mappers.CouponBatchMapper;
 import com.orosirian.trade.coupon.db.mappers.CouponMapper;
-import com.orosirian.trade.coupon.db.model.Coupon;
-import com.orosirian.trade.coupon.db.model.CouponBatch;
-import com.orosirian.trade.coupon.db.model.CouponRule;
+import com.orosirian.trade.coupon.db.mappers.TaskMapper;
+import com.orosirian.trade.coupon.db.model.*;
+import com.orosirian.trade.coupon.mq.MessageSender;
 import com.orosirian.trade.coupon.service.CouponSendService;
 import com.orosirian.trade.coupon.utils.BizException;
 import com.orosirian.trade.coupon.utils.Constants;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Slf4j
@@ -32,10 +33,15 @@ public class CouponSendServiceImpl implements CouponSendService {
     private DistributedLock distributedLock;
 
     @Autowired
+    private MessageSender messageSender;
+
+    @Autowired
     private CouponBatchMapper couponBatchMapper;
 
     @Autowired
     private CouponMapper couponMapper;
+    @Autowired
+    private TaskMapper taskMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -88,6 +94,33 @@ public class CouponSendServiceImpl implements CouponSendService {
 
         log.info("sendUserCouponSyn success: coupon info: {}", JSON.toJSONString(coupon));
         return true;
+    }
+
+    @Override
+    public boolean sendUserCouponBatch(long batchId, Set<Long> userIdSet) {
+        boolean allSuccess = true;
+        for (long userId : userIdSet) {
+            TaskSend taskSend = new TaskSend(batchId, userId);
+
+            Task task = new Task();
+            task.setStatus(0);  //
+            task.setRetryCount(0);
+            task.setBizType("send_coupon");
+            task.setBizId(UUID.randomUUID().toString());
+            task.setBizParam(JSON.toJSONString(taskSend));
+            task.setModifiedTime(LocalDateTime.now());
+            task.setCreateTime(LocalDateTime.now());
+
+            boolean res = taskMapper.insertTask(task);
+            if (res) {  // 插入任务记录，成功再发送消息
+                // 进kafka容器的/opt/kafka，bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic send-batch-coupon
+                messageSender.send("send-batch-coupon", JSON.toJSONString(task));
+            } else {
+                allSuccess = false;
+                log.error("insert task table error userId:{} batchId:{}", userId, batchId);
+            }
+        }
+        return allSuccess;
     }
 
     public Coupon createCoupon(CouponBatch couponBatch, long userId) {

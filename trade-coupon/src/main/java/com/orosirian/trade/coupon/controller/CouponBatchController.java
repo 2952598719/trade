@@ -3,6 +3,7 @@ package com.orosirian.trade.coupon.controller;
 import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.coupon.db.model.CouponBatch;
 import com.orosirian.trade.coupon.db.model.CouponRule;
+import com.orosirian.trade.coupon.mq.MessageSender;
 import com.orosirian.trade.coupon.service.CouponBatchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import java.util.Map;
 @Slf4j
 @RestController
 public class CouponBatchController {
+
+    @Autowired
+    private MessageSender messageSender;
 
     @Autowired
     private CouponBatchService couponBatchService;
@@ -66,6 +70,11 @@ public class CouponBatchController {
         List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList();
         resultMap.put("couponBatchList", couponBatchList);
         return "coupon_batch_list";
+    }
+
+    @PostMapping("/kafka")
+    public void kafkaTest() {
+        messageSender.send("test-topic", "习近平");
     }
 
 }
