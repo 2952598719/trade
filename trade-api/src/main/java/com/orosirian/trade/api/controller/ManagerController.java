@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ManagerController {
 
+    // TODO 源代码里是MVC吗，需要了解到什么程度
+
     @Autowired
     private CouponServiceClient couponServiceClient;
 
@@ -43,6 +45,16 @@ public class ManagerController {
     public String sendUserCouponBatch(@RequestParam("batchId") long batchId, @RequestParam("userIds") String userIds) {
         // \r\n用%0D%0A替代
         return couponServiceClient.sendUserCouponBatch(batchId, userIds);
+    }
+
+    @PostMapping("/code/createCouponCodeList")
+    public String createCouponCodeList(@RequestParam("batchId") long batchId, @RequestParam("codeNum") int codeNum) {
+        return couponServiceClient.createCouponCodeList(batchId, codeNum);
+    }
+
+    @PostMapping("/send/exchangeCouponWithCode/{userId}")
+    public String exchangeCouponWithCode(@PathVariable("userId") long userId, @RequestParam("couponCode") String couponCode) {
+        return couponServiceClient.exchangeCouponWithCode(userId, couponCode);
     }
 
 }

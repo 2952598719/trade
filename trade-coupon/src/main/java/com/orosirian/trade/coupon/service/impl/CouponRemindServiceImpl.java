@@ -45,7 +45,7 @@ public class CouponRemindServiceImpl implements CouponRemindService {
         task.setModifiedTime(Instant.now());
         task.setCreateTime(Instant.now());
         log.info("insertCouponRemindTask ,task:{}", JSON.toJSONString(task));
-        return taskMapper.insertTask(task);
+        return taskMapper.insertTask(task) > 0;
     }
 
     @Override

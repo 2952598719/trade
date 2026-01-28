@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface TaskMapper {
 
-    boolean insertTask(Task task);
+    int insertTask(Task task);
 
     int updateTask(Task task);
 

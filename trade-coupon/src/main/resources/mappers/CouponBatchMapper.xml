@@ -188,5 +188,10 @@
         WHERE id = #{batchId,jdbcType=BIGINT}
     </select>
 
+    <select id="isBatchExist" resultType="java.lang.Boolean">
+        SELECT COUNT(1) > 0
+        FROM coupon_batch
+        WHERE id = #{batchId}
+    </select>
 
 </mapper>

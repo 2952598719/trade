@@ -1,11 +1,7 @@
 package com.orosirian.trade.api.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 public class CouponServiceClient {
@@ -62,6 +58,24 @@ public class CouponServiceClient {
         String params = String.format("?batchId=%d&userIds=%s", batchId, userIds);
         return restTemplate.postForObject(
                 couponServiceUrl + "/send/sendBatch" + params,
+                null,
+                String.class
+        );
+    }
+
+    public String createCouponCodeList(long batchId, int codeNum) {
+        String params = String.format("?batchId=%d&codeNum=%d", batchId, codeNum);
+        return restTemplate.postForObject(
+                couponServiceUrl + "/code/createCouponCodeList" + params,
+                null,
+                String.class
+        );
+    }
+
+    public String exchangeCouponWithCode(long userId, String couponCode) {
+        String params = String.format("?couponCode=%s", couponCode);
+        return restTemplate.postForObject(
+                couponServiceUrl + "/send/exchangeCouponWithCode/" + userId + params,
                 null,
                 String.class
         );

@@ -27,4 +27,6 @@ public interface CouponBatchMapper {
 
     String selectCouponRule(Long batchId);
 
+    boolean isBatchExist(long batchId);
+
 }

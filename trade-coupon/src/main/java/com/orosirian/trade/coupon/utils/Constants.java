@@ -20,4 +20,8 @@ public class Constants {
 
     public static int REMIND_BEFORE_DAYS = 3;   // 提前三天提醒
 
+    public static String COUPON_CODE_PASSWORD = "coupon";
+
+    public static String COUPON_CODE_GROUP_KEY = "coupon:groupId";
+
 }

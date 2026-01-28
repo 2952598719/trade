@@ -1,13 +1,14 @@
 package com.orosirian.trade.coupon.controller;
 
+import com.orosirian.trade.coupon.db.model.CouponCode;
+import com.orosirian.trade.coupon.service.CouponCodeService;
 import com.orosirian.trade.coupon.service.CouponSendService;
+import com.orosirian.trade.coupon.utils.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,9 @@ public class CouponSendController {
 
     @Autowired
     private CouponSendService couponSendService;
+
+    @Autowired
+    private CouponCodeService couponCodeService;
 
     @PostMapping("/send/sendSyn")
     @ResponseBody
@@ -62,5 +66,32 @@ public class CouponSendController {
             return "优惠券批量发放失败, 原因:" + e.getMessage();
         }
     }
+
+    @PostMapping("/send/exchangeCouponWithCode/{userId}")
+    @ResponseBody
+    public String exchangeCouponWithCode(@PathVariable("userId") long userId, @RequestParam("couponCode") String couponCode) {
+        try {
+            log.info("exchange code for coupon: Req userId: {}, couponCode: {}", userId, couponCode);
+            CouponCode couponCodeInfo = couponCodeService.getCouponCode(couponCode);
+            if (couponCodeInfo == null) {
+                throw new BizException("兑换码无效");
+            }
+
+            boolean res = couponSendService.sendUserCouponSynWithLock(couponCodeInfo.getBatchId(), userId);
+            if (!res) {
+                throw new BizException("兑换失败");
+            }
+
+            couponCodeInfo.setUserId(userId);   // 在用户领取时才填写
+            couponCodeInfo.setStatus(1);
+            couponCodeInfo.setModifyTime(Instant.now());
+            boolean _ = couponCodeService.updateCouponCode(couponCodeInfo);
+            return "兑换成功";
+        } catch (Exception e) {
+            log.error("exchange code error ", e);
+            return e.getMessage();
+        }
+    }
+
 
 }

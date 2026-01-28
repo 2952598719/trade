@@ -120,7 +120,7 @@ public class CouponSendServiceImpl implements CouponSendService {
             task.setCreateTime(Instant.now());
 
             // 由于insertTask的xml标签具有useGeneratedKeys="true" keyProperty="id"，因此插入结束后task自动附加上了id
-            boolean res = taskMapper.insertTask(task);
+            boolean res = taskMapper.insertTask(task) > 0;
             if (res) {  // 插入任务记录，成功再发送消息
                 // 进kafka容器的/opt/kafka，bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic send-batch-coupon
                 messageSender.send("send-batch-coupon", JSON.toJSONString(task));

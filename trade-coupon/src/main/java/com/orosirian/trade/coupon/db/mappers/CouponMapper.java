@@ -24,6 +24,6 @@ public interface CouponMapper {
 
     boolean isCouponInvalid(long couponId);
 
-    boolean updateExpiredCoupon();
+    int updateExpiredCoupon();
 
 }

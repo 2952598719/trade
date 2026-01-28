@@ -66,3 +66,15 @@ CREATE TABLE `idempotent` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `unique` (`biz_type`,`biz_id`) USING BTREE COMMENT '唯一索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+DROP TABLE IF EXISTS coupon_code;
+CREATE TABLE `coupon_code` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `code` varchar(128) COLLATE utf8mb4_general_ci NOT NULL COMMENT '兑换码',
+    `batch_id` bigint NOT NULL COMMENT '批次ID',
+    `user_id` bigint DEFAULT NULL COMMENT '用户ID，领券时才写入',
+    `status` tinyint NOT NULL COMMENT '0-未兑换，1-已兑换，2-失效',
+    `create_time` datetime NOT NULL COMMENT '创建时间',
+    `modify_time` datetime NOT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

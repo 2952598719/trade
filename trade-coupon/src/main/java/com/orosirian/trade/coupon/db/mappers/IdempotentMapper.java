@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IdempotentMapper {
 
-    boolean insertIdempotent(TaskIdempotent idempotent);
+    int insertIdempotent(TaskIdempotent idempotent);
 
     TaskIdempotent queryIdempotentByBiz(String bizType, String bizId);
 
