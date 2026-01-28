@@ -20,6 +20,8 @@
         <module>trade-user</module>
         <module>trade-coupon</module>
         <module>trade-api</module>
+        <module>trade-goods</module>
+        <module>trade-order</module>
     </modules>
 
     <properties>

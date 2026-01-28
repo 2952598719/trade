@@ -14,11 +14,11 @@ public interface CouponMapper {
 
     int insertSelective(Coupon row);
 
-    Coupon selectByPrimaryKey(Long id);
+    Coupon queryCouponById(Long id);
 
     int updateByPrimaryKeySelective(Coupon row);
 
-    int updateByPrimaryKey(Coupon row);
+    int updateCoupon(Coupon coupon);
 
     List<Coupon> queryUserCouponList(long userId);
 

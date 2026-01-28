@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerController {
 
     // TODO 源代码里是MVC吗，需要了解到什么程度
+    // TODO TCC事务，order模块中的GoodsTranscationService和UserCouponTranscationService如何调用
 
     @Autowired
     private CouponServiceClient couponServiceClient;

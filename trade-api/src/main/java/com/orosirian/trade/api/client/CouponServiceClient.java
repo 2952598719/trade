@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class CouponServiceClient {
 
-    private final static String couponServiceUrl = "http://localhost:8083";
+    private final static String couponServiceUrl = "http://localhost:8085";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
