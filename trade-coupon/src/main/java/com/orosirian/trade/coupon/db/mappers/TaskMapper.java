@@ -16,4 +16,6 @@ public interface TaskMapper {
 
     List<Task> queryFailedTaskList();
 
+    List<Task> queryRemindTaskList();
+
 }

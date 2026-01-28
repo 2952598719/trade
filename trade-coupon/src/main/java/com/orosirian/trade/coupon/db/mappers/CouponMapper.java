@@ -22,5 +22,8 @@ public interface CouponMapper {
 
     List<Coupon> queryUserCouponList(long userId);
 
+    boolean isCouponInvalid(long couponId);
+
+    boolean updateExpiredCoupon();
 
 }

@@ -27,7 +27,7 @@
         delete from coupon_user
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insertCoupon" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
+    <insert id="insertCoupon" useGeneratedKeys="true" keyProperty="id" parameterType="com.orosirian.trade.coupon.db.model.Coupon">
         insert into coupon_user (user_id, batch_id,
                                  coupon_name, status, order_id,
                                  received_time, validate_time, used_time,
@@ -150,5 +150,17 @@
         FROM coupon_user
         WHERE user_id = #{userId,jdbcType=BIGINT}
     </select>
+
+    <select id="isCouponInvalid" resultType="java.lang.Boolean">
+        SELECT COUNT(1) > 0
+        FROM coupon_user
+        WHERE id = #{couponId} AND status <![CDATA[ != ]]> 0
+    </select>
+
+    <update id="updateExpiredCoupon">
+        UPDATE coupon_user
+        SET status = 2
+        WHERE status = 0 AND validate_time <![CDATA[ < ]]> NOW()
+    </update>
 
 </mapper>

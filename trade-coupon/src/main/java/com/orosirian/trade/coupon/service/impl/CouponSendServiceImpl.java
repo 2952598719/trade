@@ -7,6 +7,7 @@ import com.orosirian.trade.coupon.db.mappers.CouponMapper;
 import com.orosirian.trade.coupon.db.mappers.TaskMapper;
 import com.orosirian.trade.coupon.db.model.*;
 import com.orosirian.trade.coupon.mq.MessageSender;
+import com.orosirian.trade.coupon.service.CouponRemindService;
 import com.orosirian.trade.coupon.service.CouponSendService;
 import com.orosirian.trade.coupon.utils.BizException;
 import com.orosirian.trade.coupon.utils.Constants;
@@ -40,8 +41,12 @@ public class CouponSendServiceImpl implements CouponSendService {
 
     @Autowired
     private CouponMapper couponMapper;
+
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private CouponRemindService couponRemindService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -83,13 +88,16 @@ public class CouponSendServiceImpl implements CouponSendService {
             throw new BizException("更新券数量失败");
         }
         // 4. 券表新增：该用户获取优惠券记录
+        // 由于insertCoupon的xml标签具有useGeneratedKeys="true" keyProperty="id"，因此插入结束后coupon自动附加上了id
         Coupon coupon = createCoupon(couponBatch, userId);
         boolean insertCouponRes = couponMapper.insertCoupon(coupon) > 0;
         if (!insertCouponRes) {
             log.error("insert coupon failed: batchId={}, userId={}", batchId, userId);
             throw new BizException("新增该用户券记录失败");
         }
-        // 5. 现在的主流做法就是先更新数据库，再删除缓存
+        // 5. 插入券过期提醒任务
+        boolean _ = couponRemindService.insertRemindTask(userId, coupon.getId(), JSON.parseObject(couponBatch.getRule(), CouponRule.class));
+        // 6. 现在的主流做法就是先更新数据库，再删除缓存
         stringRedisTemplate.delete(Constants.LIST_KEY_PREFIX + userId);
 
         log.info("sendUserCouponSyn success: coupon info: {}", JSON.toJSONString(coupon));

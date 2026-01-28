@@ -18,4 +18,6 @@ public class Constants {
 
     public static String RULE_KEY_PREFIX = "coupon:rule:";
 
+    public static int REMIND_BEFORE_DAYS = 3;   // 提前三天提醒
+
 }

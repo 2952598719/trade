@@ -48,7 +48,15 @@
     <select id="queryFailedTaskList" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM task
-        WHERE status = 2 LIMIT 100  # 每次重试100条失败任务
+        WHERE task.biz_type = `send_coupon` AND status = 2
+        LIMIT 100  # 每次重试100条失败任务
+    </select>
+
+    <!-- <![CDATA[ <= ]]> 就是 <= -->
+    <select id="queryRemindTaskList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM task
+        WHERE task.biz_type = `remind_coupon` AND schedule_time <![CDATA[ <= ]]> now() AND status = 0
     </select>
 
 </mapper>
