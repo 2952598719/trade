@@ -8,7 +8,7 @@ public interface CouponBatchService {
 
     boolean insertCouponBatch(CouponBatch couponBatch);
 
-    List<CouponBatch> queryCouponBatchList();
+    List<CouponBatch> queryCouponBatchList(int page, int pageSize);
 
     String selectCouponRule(long batchId);
 

@@ -21,7 +21,9 @@ public interface CouponBatchMapper {
     int updateCouponBatch(CouponBatch row);
 
     // 自定义语句
-    List<CouponBatch> queryCouponBatchList();
+    List<CouponBatch> queryCouponBatchListWithJoin(int lastId, int pageSize);
+
+    List<CouponBatch> queryCouponBatchListWithIn(int lastId, int pageSize);
 
     int updateSendCouponBatchCount(Long batchId);
 

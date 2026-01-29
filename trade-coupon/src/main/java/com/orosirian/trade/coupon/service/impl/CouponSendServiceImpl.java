@@ -69,8 +69,8 @@ public class CouponSendServiceImpl implements CouponSendService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean sendUserCouponSyn(long batchId, long userId) {   // 同步发券给单个用户
+        // 执行之前或许可以通过OpenFeign向User服务查询userId是否存在
         // 1. 查询batch信息
-        // TODO 用户存在性或许应该在网关层检查？
         CouponBatch couponBatch = couponBatchMapper.queryCouponBatchById(batchId);
         if (couponBatch == null) {
             log.error("coupon batch is not exist: batchId={}, userId={}", batchId, userId);

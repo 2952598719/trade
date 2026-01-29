@@ -66,8 +66,8 @@ public class CouponBatchController {
     }
 
     @GetMapping("/batch/couponBatchList")
-    public String couponBatchList(Map<String, Object> resultMap) {
-        List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList();
+    public String couponBatchList(Map<String, Object> resultMap, int page, int pageSize) {
+        List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList(page, pageSize);
         resultMap.put("couponBatchList", couponBatchList);
         return "coupon_batch_list";
     }

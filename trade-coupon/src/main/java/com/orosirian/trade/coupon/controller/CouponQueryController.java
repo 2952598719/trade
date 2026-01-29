@@ -30,31 +30,19 @@ public class CouponQueryController {
     private CouponQueryService couponQueryService;
 
     @GetMapping("/query/user")
-    public String queryUserCouponList(@RequestParam("userId") long userId) {
-        List<Coupon> couponList = couponQueryService.queryUserCouponList(userId);
-        List<CouponVO> notUsedList = new ArrayList<>();
-        List<CouponVO> usedList = new ArrayList<>();
-        List<CouponVO> expiredList = new ArrayList<>();
-        for (Coupon coupon : couponList) {
+    public List<CouponVO> queryUserCouponList(@RequestParam("status") int status, @RequestParam("userId") long userId, @RequestParam("lastCouponId") long lastCouponId, @RequestParam("pageSize") int pageSize) {
+        List<Coupon> unusedList = couponQueryService.queryUserCouponList(status, userId, lastCouponId, pageSize);
+        List<CouponVO> unusedVOList = new ArrayList<>();
+        for (Coupon coupon : unusedList) {
             CouponVO couponVO = createCouponVO(coupon);
-            if (coupon.getStatus() == 0) {
-                notUsedList.add(couponVO);
-            } else if (coupon.getStatus() == 1) {
-                usedList.add(couponVO);
-            } else if (coupon.getStatus() == 2) {
-                expiredList.add(couponVO);
-            }
+            unusedVOList.add(couponVO);
         }
-        Map<String, List<CouponVO>> couponMap = new HashMap<>();
-        couponMap.put("notUsedList", notUsedList);
-        couponMap.put("usedList", usedList);
-        couponMap.put("expiredList", expiredList);
-        return JSON.toJSONString(couponMap);  // 不存在记录导致返回空列表也没事
+        return unusedVOList;  // 不存在记录导致返回空列表也没事
     }
 
     @GetMapping("/query/user/withoutcache")
-    public String queryUserCouponListWithoutCache(@RequestParam("userId") long userId) {
-        List<Coupon> couponList = couponQueryService.queryUserCouponListWithoutCache(userId);
+    public Map<String, List<CouponVO>> queryUserCouponListWithoutCache(@RequestParam("userId") long userId, @RequestParam("lastCouponId") long lastCouponId, @RequestParam("pageSize") int pageSize) {
+        List<Coupon> couponList = couponQueryService.queryUserCouponListWithoutCache(userId, lastCouponId, pageSize);
         List<CouponVO> notUsedList = new ArrayList<>();
         List<CouponVO> usedList = new ArrayList<>();
         List<CouponVO> expiredList = new ArrayList<>();
@@ -72,7 +60,7 @@ public class CouponQueryController {
         couponMap.put("notUsedList", notUsedList);
         couponMap.put("usedList", usedList);
         couponMap.put("expiredList", expiredList);
-        return JSON.toJSONString(couponMap);  // 不存在记录导致返回空列表也没事
+        return couponMap;  // 不存在记录导致返回空列表也没事
     }
 
     public CouponVO createCouponVO(Coupon coupon) {

@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface CouponQueryService {
 
-    List<Coupon> queryUserCouponList(long userId);
+    List<Coupon> queryUserCouponList(int status, long userId, long lastCouponId, int pageSize);
 
-    List<Coupon> queryUserCouponListWithoutCache(long userId);
+    List<Coupon> queryUserCouponListWithoutCache(long userId, long lastCouponId, int pageSize);
 
 }

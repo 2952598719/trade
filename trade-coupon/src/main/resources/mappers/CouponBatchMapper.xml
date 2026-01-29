@@ -171,9 +171,26 @@
 
 
     <!-- 自定义语句 -->
-    <select id="queryCouponBatchList"  resultMap="BaseResultMap">
+    <select id="queryCouponBatchListWithJoin"  resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon_batch AS batch
+        JOIN (
+            SELECT id
+            FROM coupon_batch
+            ORDER BY id
+            LIMIT #{prevLineNum}, #{pageSize}
+        ) AS tmp ON batch.id = tmp.id;
+    </select>
+
+    <select id="queryCouponBatchListWithIn"  resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM coupon_batch
+        WHERE id IN (
+            SELECT id
+            FROM coupon_batch
+            ORDER BY id
+            LIMIT #{prevLineNum}, #{pageSize}
+        )
     </select>
 
     <update id="updateSendCouponBatchCount" parameterType="java.lang.Long">

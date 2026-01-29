@@ -20,7 +20,11 @@ public interface CouponMapper {
 
     int updateCoupon(Coupon coupon);
 
-    List<Coupon> queryUserCouponList(long userId);
+    List<Coupon> queryUserCouponListUnused(long userId, long lastCouponId, int pageSize);
+
+    List<Coupon> queryUserCouponListUsed(long userId, long lastCouponId, int pageSize);
+
+    List<Coupon> queryUserCouponListExpired(long userId, long lastCouponId, int pageSize);
 
     boolean isCouponInvalid(long couponId);
 

@@ -144,10 +144,25 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <select id="queryUserCouponList" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    <select id="queryUserCouponListUnused" resultMap="BaseResultMap" parameterType="java.lang.Long">
         SELECT <include refid="Base_Column_List"/>
         FROM coupon_user
-        WHERE user_id = #{userId,jdbcType=BIGINT}
+        WHERE user_id = #{userId} AND id > #{lastCouponId} AND status = 0
+        LIMIT #{pageSize,jdbcType=INTEGER,javaType=java.lang.Integer}
+    </select>
+
+    <select id="queryUserCouponListUsed" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon_user
+        WHERE user_id = #{userId} AND id > #{lastCouponId} AND status = 1
+        LIMIT #{pageSize,jdbcType=INTEGER,javaType=java.lang.Integer}
+    </select>
+
+    <select id="queryUserCouponListExpired" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT <include refid="Base_Column_List"/>
+        FROM coupon_user
+        WHERE user_id = #{userId} AND id > #{lastCouponId} AND status = 2
+        LIMIT #{pageSize,jdbcType=INTEGER,javaType=java.lang.Integer}
     </select>
 
     <select id="isCouponInvalid" resultType="java.lang.Boolean">

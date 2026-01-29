@@ -38,22 +38,6 @@ public class CouponServiceClient {
         );
     }
 
-    public String queryUserCouponList(long userId) {
-        String params = String.format("?userId=%d", userId);
-        return restTemplate.getForObject(
-            couponServiceUrl + "/query/user" + params,
-            String.class
-        );
-    }
-
-    public String queryUserCouponListWithoutCache(long userId) {
-        String params = String.format("?userId=%d", userId);
-        return restTemplate.getForObject(
-                couponServiceUrl + "/query/user/withoutcache" + params,
-                String.class
-        );
-    }
-
     public String sendUserCouponBatch(long batchId, String userIds) {
         String params = String.format("?batchId=%d&userIds=%s", batchId, userIds);
         return restTemplate.postForObject(

@@ -28,8 +28,9 @@ public class CouponBatchServiceImpl implements CouponBatchService {
     }
 
     @Override
-    public List<CouponBatch> queryCouponBatchList() {
-        return couponBatchMapper.queryCouponBatchList();
+    public List<CouponBatch> queryCouponBatchList(int page, int pageSize) {
+        int prevLineNum = page * pageSize;
+        return couponBatchMapper.queryCouponBatchListWithJoin(prevLineNum, pageSize);
     }
 
     @Override

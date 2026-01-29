@@ -1,6 +1,6 @@
 package com.orosirian.trade.api.controller;
 
-import com.orosirian.trade.api.client.CouponServiceClient;
+import com.alibaba.fastjson.JSON;
 import com.orosirian.trade.api.client.CouponServiceFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 public class ManagerController {
-
-    // TODO 源代码里是MVC吗，需要了解到什么程度
-    // TODO TCC事务，order模块中的GoodsTranscationService和UserCouponTranscationService如何调用
 
 //    @Autowired
 //    private CouponServiceClient couponServiceClient;
@@ -39,11 +36,10 @@ public class ManagerController {
         return couponServiceFeignClient.sendCouponSynWithLock(batchId, userId);
     }
 
-    @GetMapping("/query/queryUserCoupons")
-    public String queryUserCoupons(@RequestParam("userId") long userId) {
-        // TODO 这里的逻辑应该是反序列化成List进行处理再序列化发给前端吗
+    @GetMapping("/query/user")
+    public String queryUserCouponList(@RequestParam("status") int status, @RequestParam("userId") long userId, @RequestParam("lastCouponId") long lastCouponId, @RequestParam("pageSize") int pageSize) {
         // 1线程下的jmeter压测QPS（开启虚拟线程）：queryUserCouponsWithoutCache-96，queryUserCoupons-102
-        return couponServiceFeignClient.queryUserCouponList(userId);
+        return JSON.toJSONString(couponServiceFeignClient.queryUserCouponList(status, userId, lastCouponId, pageSize));
     }
 
     @PostMapping("/send/sendBatch")
