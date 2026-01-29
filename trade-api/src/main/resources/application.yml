@@ -23,6 +23,14 @@ spring:
   threads:
     virtual:
       enabled: true
+  application:
+    name: api
+  cloud:
+    nacos:
+      discovery:
+        username: nacos             # nacos 登录用户名
+        password: nacos             # nacos 密码
+        server-addr: 127.0.0.1:8848 # nacos 服务端地址
 
 mybatis:
   mapper-locations: classpath*:mappers/*.xml

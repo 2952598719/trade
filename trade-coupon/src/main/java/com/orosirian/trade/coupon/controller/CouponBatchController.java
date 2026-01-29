@@ -42,7 +42,7 @@ public class CouponBatchController {
         CouponRule couponRule = new CouponRule();
         couponRule.setCouponType(couponType);
         couponRule.setGrantType(grantType);
-        couponRule.setStartTime(Instant.parse(startTime));  // 原先格式类似2026-01-26T17:24:30
+        couponRule.setStartTime(Instant.parse(startTime));  // 格式类似2026-01-26T17:24:30Z，最后的Z不能省略
         couponRule.setEndTime(Instant.parse(endTime));
         couponRule.setThresholdAmount(thresholdAmount);
         couponRule.setDiscountAmount(discountAmount);
